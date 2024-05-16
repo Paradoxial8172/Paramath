@@ -1,0 +1,8 @@
+README.md
+setup.py
+paramath/__init__.py
+paramath/main.py
+paramath.egg-info/PKG-INFO
+paramath.egg-info/SOURCES.txt
+paramath.egg-info/dependency_links.txt
+paramath.egg-info/top_level.txt
