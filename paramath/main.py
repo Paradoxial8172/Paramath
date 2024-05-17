@@ -68,7 +68,7 @@ def sqrt(radical: float) -> float:
     if radical > 0:
         return radical ** (1/2)
     elif radical < 0:
-        raise ValueError("Domain Error: parameter must be greater than zero.")
+        raise ValueError("Cannot take square root of negative integer values.")
     
 def nthroot(radical: float, nthconst: float) -> float:
     return radical ** (1/nthconst)
@@ -129,7 +129,9 @@ def hyp(a: float, b: float) -> float:
     Returns:
         float: Hypotnuse of the triangle. (returns square root of the sum of both sides.)
     """
-    return sqrt((a ** 2) + (b ** 2))
+    c = (a**2) + (b**2)
+    return round(sqrt(c), 10)
+
 
 def sin(x: float) -> float:
     """Returns the sine of an angle (x).
@@ -209,7 +211,7 @@ def csc(x: float) -> float:
         float: Returns cosecant of angle. (calculated by 1 / sin(x))
     """
 
-    if x == 180 or x == 360:
+    if x == 180 or x == 360 or x == 0:
         return "Undefined"
     return 1 / sin(x)
 
@@ -222,9 +224,12 @@ def cot(x: float) -> float:
     Returns:
         float: Returns cotangent of angle. (calculated by 1 / tan(x))
     """
-    if x == 0:
+    if x == 0 or x == 180 or x == 360:
         return "Undefined"
+    if x == 90 or x == 270:
+        return 0
     return 1 / tan(x)
+
 
 def sinc(x: float) -> float:
     """Returns the sine cardinal of x.
@@ -249,23 +254,62 @@ def sinh(x: float) -> float:
     return ((e ** x) - (e ** -x)) / 2
 
 def cosh(x: float) -> float: #hyperbolic cosine
-    """Returns the hyperbolic cosine."""
+    """Returns the hyperbolic cosine of x.
+
+    Args:
+        x (float): Input.
+
+    Returns:
+        float: Hyperbolic cosine of x.
+    """    
     return ((e ** x) + (e ** -x)) / 2
 
 def tanh(x: float) -> float: #hyperbolic tangent
-    """Returns the hyperbolic tangent."""
+    """Returns the hyperbolic tangent of x.
+
+    Args:
+        x (float): Input.
+
+    Returns:
+        float: Hyperbolic tangent of x.
+    """    
     return sinh(x) / cosh(x)
 
 def sech(x: float) -> float: #hyperbolic secant
-    """Returns the hyperbolic secant."""
+    """Returns the hyperbolic secant of x.
+
+    Args:
+        x (float): Input.
+
+    Returns:
+        float: Hyperbolic secant of x.
+    """    
     return 1 / cosh(x)
 
 def csch(x: float) -> float: #hyperbolic cosecant
-    """Returns the hyperbolic cosecant."""
+    """Returns the hyperbolic cosecant of x.
+
+    Args:
+        x (float): Input.
+
+    Returns:
+        float: Hyperbolic cosecant of x.
+    """
+    if x == 0:
+        return "Undefined"    
     return 1 / sinh(x)
 
 def coth(x: float) -> float: #hyperbolic cotangent
-    """Returns the hyperbolic cotangent."""
+    """Returns the hyperbolic cotangent of x.
+
+    Args:
+        x (float): Input.
+
+    Returns:
+        float: Hyperbolic cotangent of x.
+    """    
+    if x == 0:
+        return "undefined"
     return 1 / tanh(x)
 
 def polynomial_integral(polynomial: list, upperbound: float, lowerbound: float) -> float:
@@ -274,14 +318,14 @@ def polynomial_integral(polynomial: list, upperbound: float, lowerbound: float) 
        it will be interpreted as 3x^2 + 5x - 2, then integrated
        using the power rule x^n+1/n+1"""
     
-def cis(x: float) -> str:
+def cis(x: float) -> complex:
     """Returns a complex number.
 
     Args:
         x (float): Angle in degrees.
 
     Returns:
-        str: Returns complex number using the cis method otherwise known as e^ix. The return value cannot be used in other methods.
+        str: Returns complex number using the cis method otherwise known as e^ix.
     """
     
     return complex(cos(x), sin(x))
@@ -444,11 +488,10 @@ def count(values: list, square=False) -> float:
 #OBJECTS
 
 class DataSet:
-    """Create a DataSet object with a given list of numbers.
+    """Create a DataSet object using a list[int] or list[float] values to perform operations to find things such as the mean, median, maximum, minimum, count, etc..
 
     Args:
-
-    array: list[int] or list[float]
+        array: list[int] or list[float]
     """
     def __init__(self, array: list):
         self.array = array
@@ -603,11 +646,11 @@ class Parabola:
         try: 
             solution_one = ((-1 * self.b) + sqrt(radical)) / denominator
         except TypeError:
-            solution_one = "i"
+            solution_one = "j"
         try:
             solution_two = ((-1 * self.b) - sqrt(radical)) / denominator
         except TypeError:
-            solution_two = "i"
+            solution_two = "j"
         
         return (solution_one, solution_two)
     
@@ -679,6 +722,11 @@ class Parabola:
         return self.a * (h ** 2) + (self.b * h) + (self.c)
 
 class Table():
+    """
+    NEW!
+    Create a table object by providing two lists (list[int] or list[float]) of X and Y values to perform operations such as finding the line of best fit, and more!.
+
+    """
     def __init__(self, L1_X: list, L2_Y: list):
         self.L1_X = L1_X
         self.L2_Y = L2_Y
@@ -704,7 +752,7 @@ class Table():
 
     def linear_regression(self) -> str:
         """Generates a rough approximation of a linear function that best represents the trend with respect to x and y values. 
-           Form: y=mx+b
+        Form: y=mx+b\n
         Returns:
             str: Rough approximated linear function of the plot.
         """
@@ -726,3 +774,25 @@ class Table():
             sign = "+"
 
         return f"y = {round(slope, 2)}x {sign} {round(constant, 2)}"
+
+    def coefficient_of_determination(self) -> float:
+        """Returns the coefficient of determination otherwise known as the R^2 value. \n
+
+        Note: R^2 is a rough approximation that essentially tells you how well the regression fits and predicts values. (The closer R^2 is to 1.0, the better.)
+
+        Returns:
+            float: Coefficient of determination / R^2
+        """
+        index_count = len(self.L2_Y)
+        sum_x = count(self.L1_X)
+        sum_y = count(self.L2_Y)
+        sum_squared_x_values = count(self.L1_X, square=True)
+        sum_squared_y_values = count(self.L2_Y, square=True)
+        sum_x_y_values = 0
+        for i in range(0, len(self.L1_X)):
+            sum_x_y_values += (self.L1_X[i] * self.L2_Y[i])
+
+        r = ((index_count * (sum_x_y_values)) - (sum_x * sum_y))/(sqrt((index_count * sum_squared_x_values) - sum_x ** 2) * sqrt((index_count * sum_squared_y_values) - sum_y ** 2))
+
+        return r**2
+
