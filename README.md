@@ -4,7 +4,7 @@ Package Repository includes:
 - Example Python files located ```/Paramath/examples/```.
 - Directions on how to use this library.
 
-View [Paramath on PyPi](https://pypi.org/project/paramath/)!
+View [Paramath](https://pypi.org/project/paramath/) on PyPi!
 
 ## VERSION
 0.1.1 | May 16 2024
