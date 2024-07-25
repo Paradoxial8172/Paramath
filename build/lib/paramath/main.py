@@ -71,8 +71,9 @@ def sqrt(radical: float) -> float:
         raise ValueError("Cannot take square root of negative integer values.")
     
 def nrsqrt(radical: float) -> float:
-    """Unlike the basic paramath.sqrt() function, paramath.nsqrt() uses the Newton-Raphson algorithm for finding square roots. Accuracy may differ at a difference of 1/1000    Args:
-        
+    """Unlike the basic paramath.sqrt() function, paramath.nsqrt() uses the Newton-Raphson algorithm for finding square roots. Accuracy may differ at a difference of 1/1000
+
+    Args: 
         radical (float): Main argument
 
     Returns:
