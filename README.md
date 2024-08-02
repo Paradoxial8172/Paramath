@@ -8,8 +8,9 @@ Package Repository includes:
 
 Dear Python Developer:
 
-    I personally started this project to teach myself on how to implement powerful mathematical algorithms into any Python project. Over time, this project has grown to have nearly 100 different functions/methods. This project has also grown into something that I am quite proud of to have, and I hope those who use it, have good experiences. Something worth mentioning... Is that the Paramath project is constantly being developed and tested. That means that there are going to be bugs within this project. I hope to squash these bugs as soon as possible if and when they arise. Keep in mind that some of the functions/methods that are recently added are ones that are most likely to contain bugs, and results may not be what are intended, or they may be inaccurate. With this in mind, feel free to check out Paramath for yourself and feel free to let me know about any bugs you may find. Thank you for using Paramath!
-
+    ```python
+    "I personally started this project to teach myself on how to implement powerful mathematical algorithms into any Python project. Over time, this project has grown to have nearly 100 different functions/methods. This project has also grown into something that I am quite proud of to have, and I hope those who use it, have good experiences. Something worth mentioning... Is that the Paramath project is constantly being developed and tested. That means that there are going to be bugs within this project. I hope to squash these bugs as soon as possible if and when they arise. Keep in mind that some of the functions/methods that are recently added are ones that are most likely to contain bugs, and results may not be what are intended, or they may be inaccurate. With this in mind, feel free to check out Paramath for yourself and feel free to let me know about any bugs you may find. Thank you for using Paramath!"
+    ```
     ... Tamer Alssaleh
 
 View [Paramath](https://pypi.org/project/paramath/) on PyPi!
