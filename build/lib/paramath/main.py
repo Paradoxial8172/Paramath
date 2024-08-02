@@ -1,13 +1,37 @@
+""""""
+
 from collections import Counter
 from typing import *
+from re import search
+from math import log2
+from random import choice, randint
 
-pi = 3.1415926535897
-e = 2.7182818284590
-tau = 2 * pi
-phi = float(str((1 + 5**(1/2))/2)[:-2])
+# Error handling
+"""
+To do later...
+"""
 
-def is_equal(x: float, y: float) -> bool: #checks if two arguments are equal 
-    """Checks if two numbers are equal."""
+pi: float = 3.1415926535897
+e: float = 2.7182818284590
+tau: float = 2 * pi
+phi: float = float(str((1 + 5**(1/2))/2)[:-2])
+
+"""
+Constants to be used in certain mathematical functions.
+"""
+
+# DEGREES or RADIANS
+
+DEGREES: str = "degrees"
+RADIANS: str = "radians"
+
+# Function / Y_Equals notations
+
+FUNCTION: str = "function"
+Y_EQUALS: str = "y_equals"
+
+def is_equal(x: float, y: float) -> bool: # checks if two arguments are equal 
+    """Checks if two numbers are equal. Returns True if yes, otherwise False."""
     if x == y:
         return True
     else:
@@ -16,14 +40,15 @@ def is_equal(x: float, y: float) -> bool: #checks if two arguments are equal
 def is_close(x: float, y: float, limit: float=0.25) -> bool:
     """Checks if two numbers are close to each other but not the same. 
        The limit parameter is the value that must be greater than the 
-       difference between x and y. (limit is 0.25 on default)""" 
+       difference between x and y. (limit is 0.25 by default)""" 
     difference = x - y
     if abs(difference) > limit:
         return False
     else:
         return True
     
-def is_prime(n) -> bool:
+def is_prime(n: float) -> bool:
+    """Checks if a number is a prime number. Returns True if yes, otherwise False."""
     if n < 2:
         return False
     for i in range(2, int(n/2) + 1):
@@ -42,6 +67,56 @@ def power(base: float, exponent: float) -> float:
         float: base^exponent
     """
     return base ** exponent
+
+def log(x):
+    if x < 0 or x == 0:
+        raise ValueError("Cannot take logarithm of negative values.")
+    if x == 1:
+        return 0
+    if x < 1:
+        return - log(1 / x)
+    n = 1
+    term = (x - 1) / x
+    sum = term
+    while True:
+        n += 1
+        term *= (x - 1) / x
+        new_term = term / n
+        sum += new_term
+        if abs(new_term) < 1e-10:
+            break
+    return sum
+
+def log10(x):
+    """Returns the logarithm of a number with base 10."""
+
+    ln_10 = log(10)
+    result = log(x) / ln_10
+
+    if is_close(result, round(result), 0.0001):
+        return round(result)
+    else:
+        return result
+
+def logb(x: float, base: float) -> float:
+    """Returns the logarithm of `x` with a given base. 
+
+    Args:
+        x (float): Main argument.
+        base (float): Base.
+
+    Returns:
+        float: Logarithm of `x` with base `base`.
+    """
+
+    ln_base = log(base)
+
+    result = log(x) / ln_base
+
+    if is_close(result, round(result), 0.0001):
+        return round(result)
+    else:
+        return result
 
 def squared(base: float) -> float:
     return base ** 2
@@ -64,36 +139,67 @@ def fibonacci(n: int) -> list:
         fibonacci_sequence.append(next_term)
     return fibonacci_sequence
 
-def sqrt(radical: float) -> float:
-    if radical > 0:
-        return radical ** (1/2)
-    elif radical < 0:
-        raise ValueError("Cannot take square root of negative integer values.")
-    
-def nrsqrt(radical: float) -> float:
-    """Unlike the basic paramath.sqrt() function, paramath.nsqrt() uses the Newton-Raphson algorithm for finding square roots. Accuracy may differ at a difference of 1/1000
+def sqrt(radicand: float) -> float:
+    """Calculates the square root of a number using Python's exponentiation operator.
 
-    Args: 
-        radical (float): Main argument
+    Args:
+        radicand (float): Main argument.
+
+    Raises:
+        ValueError: In event that the main argument is a negative number.
 
     Returns:
-        float: Square root using Newton's Algorithm.
+        float: Square root of 
+    """
+    if radicand > 0:
+        try: 
+            return radicand ** (1/2)
+        except TypeError:
+            pass
+    elif radicand < 0:
+        raise ValueError("Cannot take square root of negative values.")
+    
+def nrsqrt(radicand: float) -> float:
+    """Unlike the basic paramath.sqrt() function, paramath.nsqrt() uses the Newton-Raphson algorithm for finding square roots. Accuracy may differ in some calculations.
+
+    Args: 
+        radicand (float): Main argument.
+
+    Raises:
+        ValueError: In event that the main argument is a negative number.
+
+    Returns:
+        float: Square root using Newton-Raphson Algorithm.
     """
 
-    if radical < 0:
-        raise ValueError("Cannot take square root of negative integer values.")
+    if radicand < 0:
+        raise ValueError("Cannot take square root of negative values.")
     else:
-        x = radical / 2
+        x = radicand / 2
         while True:
-            term = 0.5 * (x + radical / x)
+            term = 0.5 * (x + radicand / x)
             if abs(x - term) < 1e-10:
                 return term
             x = term
+
+def cuberoot(radicand: float) -> float:
+    """Returns the cuberoot of the radicand."""
+    return radicand ** (1/3)
         
-def nthroot(radical: float, nthconst: float) -> float:
-    return radical ** (1/nthconst)
+def nthroot(radicand: float, nthconst: float) -> float:
+    """Returns the nthroot of the radicand.
+
+    Args:
+        radicand (float): Radicand (main argument)
+        nthconst (float): Index (n, the number that the root will be taken of).
+
+    Returns:
+        float: Nthroot of the radicand.
+    """
+    return radicand ** (1/nthconst)
 
 def factorial(constant: int) -> int:
+    """Calculates the factorial by multiplying the constant by itself subtracted by 1 until it reaches 0."""
     try:
         factorial = 1
         for num in range(2, constant + 1):
@@ -103,6 +209,15 @@ def factorial(constant: int) -> int:
         raise TypeError("factorial function cannot take in non-integer values.")
        
 def permutation(total: int, objects: int) -> int:
+    """Returns the number of orders/arrangements a set can be established in.
+
+    Args:
+        total (int): Total amount of items.
+        objects (int): Number of unique items that exist.
+
+    Returns:
+        int: Calculated order/arrangements.
+    """
     return factorial(objects) / factorial(objects - total)
 
 def combination(total: int, choices: int) -> int:
@@ -153,17 +268,27 @@ def hyp(a: float, b: float) -> float:
     return round(sqrt(c), 10)
 
 
-def sin(x: float) -> float:
-    """Returns the sine of an angle (x).
+def sin(x: float, mode=DEGREES) -> float:
+    """Returns the sine of an angle
 
     Args:
-        x (float): Angle in degrees.
+        x (float): Angle.
+        mode (_type_, optional): DEGREES, RADIANS. Defaults to DEGREES.
+
+    Raises:
+        NameError: This error occurs when an argument other than DEGREES & RADIANS are used.
 
     Returns:
-        float: Sine of angle.
+        float: Sine of angle 'x'.
     """
-    x %= 360
-    x = radians(x)
+
+    if mode == DEGREES:
+        x %= 360
+        x = radians(x)
+    elif mode == RADIANS:
+        x %= tau
+    else: 
+        raise NameError("Invalid mode name for function.")
     
     result = 0
     sign = 1
@@ -174,15 +299,27 @@ def sin(x: float) -> float:
     
     return round(result, 10)
 
-def cos(x: float) -> float: 
-    """Returns the cosine of an angle (x).
+def cos(x: float, mode=DEGREES) -> float: 
+    """Returns the cosine of an angle
 
     Args:
-        x (float): Angle in degrees.
+        x (float): Angle.
+        mode (_type_, optional): DEGREES, RADIANS. Defaults to DEGREES.
+
+    Raises:
+        NameError: This error occurs when an argument other than DEGREES & RADIANS are used.
 
     Returns:
-        float: Returns cosine of angle.
+        float: Cosine of angle 'x'.
     """
+    if mode == DEGREES:
+        x %= 360
+        x = radians(x)
+    elif mode == RADIANS:
+        x %= tau
+    else: 
+        raise NameError("Invalid mode name for function.")
+    
     x %= 360
     x = radians(x)
     
@@ -195,60 +332,112 @@ def cos(x: float) -> float:
 
     return round(result, 10)
 
-def tan(x: float) -> float:
-    """Returns the tangent of an angle (x).
+def tan(x: float, mode=DEGREES) -> float:
+
+    """Returns the tangent of an angle
 
     Args:
-        x (float): Angle in degrees.
+        x (float): Angle.
+        mode (_type_, optional): DEGREES, RADIANS. Defaults to DEGREES.
+
+    Raises:
+        NameError: This error occurs when an argument other than DEGREES & RADIANS are used.
 
     Returns:
-        float: Returns tangent of angle. (calculated by sin(x) / cos(x))
+        float: Tangent of angle 'x'.
     """
-    if x == 90 or x == 270:
-        return "Undefined"
-    return sin(x) / cos(x)
 
-def sec(x: float) -> float: 
-    """Returns the secant of an angle (x).
+    if mode == DEGREES:
+        if x == 90 or x == 270:
+            return "Undefined"
+        return sin(x) / cos(x)
+    elif mode == RADIANS:
+        if x == pi/4 or x == 3 * pi/4:
+            return "Undefined"
+        return sin(x, RADIANS) / cos(x, RADIANS)
+    else: 
+        raise NameError("Invalid mode name for function.")
+    
+
+
+def sec(x: float, mode=DEGREES) -> float: 
+
+    """Returns the secant of an angle
 
     Args:
-        x (float): Angle in degrees.
+        x (float): Angle.
+        mode (_type_, optional): DEGREES, RADIANS. Defaults to DEGREES.
+
+    Raises:
+        NameError: This error occurs when an argument other than DEGREES & RADIANS are used.
 
     Returns:
-        float: Returns secant of angle. (calculated by 1 / cos(x))
+        float: Secant of angle 'x'.
     """
-    if x == 90 or x == 270:
-        return "Undefined"
-    return 1 / cos(x)
 
-def csc(x: float) -> float:
-    """Returns the cosecant of an angle (x).
+    if mode == DEGREES:
+        if x == 90 or x == 270:
+            return "Undefined"
+        return 1 / cos(x)
+    elif mode == RADIANS:
+        if x == pi/4 or x == 3 * pi/4:
+            return "Undefined"
+        return 1 / cos(x, RADIANS)
+    else: 
+        raise NameError("Invalid mode name for function.")
+
+
+def csc(x: float, mode=DEGREES) -> float:
+
+    """Returns the cosecant of an angle
 
     Args:
-        x (float): Angle in degrees.
+        x (float): Angle.
+        mode (_type_, optional): DEGREES, RADIANS. Defaults to DEGREES.
+
+    Raises:
+        NameError: This error occurs when an argument other than DEGREES & RADIANS are used.
 
     Returns:
-        float: Returns cosecant of angle. (calculated by 1 / sin(x))
+        float: Cosecant of angle 'x'.
     """
 
-    if x == 180 or x == 360 or x == 0:
-        return "Undefined"
-    return 1 / sin(x)
+    if mode == DEGREES:
+        if x == 180 or x == 360 or x == 0:
+            return "Undefined"
+        return 1 / sin(x)
+    elif mode == RADIANS:
+        if x == pi/2 or x == 2 * pi or x == 0:
+            return "Undefined"
+        return 1 / sin(x, RADIANS)
+    else: 
+        raise NameError("Invalid mode name for function.")
 
-def cot(x: float) -> float:
-    """Returns the cotangent of an angle (x).
+def cot(x: float, mode=DEGREES) -> float:
+
+    """Returns the cotangent of an angle
 
     Args:
-        x (float): Angle in degrees.
+        x (float): Angle.
+        mode (_type_, optional): DEGREES, RADIANS. Defaults to DEGREES.
+
+    Raises:
+        NameError: This error occurs when an argument other than DEGREES & RADIANS are used.
 
     Returns:
-        float: Returns cotangent of angle. (calculated by 1 / tan(x))
+        float: Cotangent of angle 'x'.
     """
-    if x == 0 or x == 180 or x == 360:
-        return "Undefined"
-    if x == 90 or x == 270:
-        return 0
-    return 1 / tan(x)
+    
+    if mode == DEGREES:
+        if x == 0 or x == 180 or x == 360:
+            return "Undefined"
+        return 1 / tan(x)
+    elif mode == RADIANS:
+        if x == pi/4 or x == 3 * pi/2:
+            return 0
+        return 1 / tan(x, RADIANS)
+    else: 
+        raise NameError("Invalid mode name for function.")
 
 
 def sinc(x: float) -> float:
@@ -638,6 +827,24 @@ class DataSet:
         
         return primes
     
+    def get_data_insights(self):
+        """Returns a dictionary of common insights for the dataset."""
+
+        insights = {
+            "Mean": self.mean(),
+            "Median": self.median(),
+            "Mode": self.mode(),
+            "Maximum Value": self.max(),
+            "Minimum Value": self.min(),
+            "Evens": self.evens(),
+            "Odds": self.odds(),
+            "Prime Numbers": self.primes(),
+            "Occurrences": self.num_counts(),
+            "Sum": self.sum()
+        }
+
+        return insights
+    
 class Parabola:
     """Create a Parabola object from given arguments of a, b, and c. 
 
@@ -660,15 +867,15 @@ class Parabola:
         already provided outside the Parabola object.
         """
         
-        radical = (self.b ** 2) - (4 * self.a * self.c)
+        radicand = (self.b ** 2) - (4 * self.a * self.c)
         denominator = 2 * self.a
 
         try: 
-            solution_one = ((-1 * self.b) + sqrt(radical)) / denominator
+            solution_one = ((-1 * self.b) + sqrt(radicand)) / denominator
         except TypeError:
             solution_one = "j"
         try:
-            solution_two = ((-1 * self.b) - sqrt(radical)) / denominator
+            solution_two = ((-1 * self.b) - sqrt(radicand)) / denominator
         except TypeError:
             solution_two = "j"
         
@@ -799,9 +1006,6 @@ class Table():
         """Returns the coefficient of determination otherwise known as the R^2 value. \n
 
         Note: R^2 is a rough approximation that essentially tells you how well the regression fits and predicts values. (The closer R^2 is to 1.0, the better.)
-
-        Returns:
-            float: Coefficient of determination / R^2
         """
         index_count = len(self.L2_Y)
         sum_x = count(self.L1_X)
@@ -816,3 +1020,166 @@ class Table():
 
         return r**2
 
+# Classes
+
+class Volumetrics():
+    """This class offers functions used for finding volumes of several common three-dimensional shapes and spaces."""
+    
+    @staticmethod
+    def cuboid(length: float, width: float, height: float) -> float: 
+        """Calculates the volume of the cuboid. 
+
+        Args:
+            length (float): Length of cuboid.
+            width (float): Width of cuboid.
+            height (float): Height of cuboid.
+
+        Returns: 
+            float: Volume of cuboid.
+        """
+        return length * width * height
+    
+    @staticmethod
+    def Pyramid(length: float, width: float, height: float) -> float:
+        """Calculates the volume of a pyramid
+
+        Args:
+            length (float): Length of pyramid.
+            width (float): Width of pyramid.
+            height (float): Height of pyramid.
+
+        Returns:
+            float: Volume of pyramid.
+        """
+        return (length * width * height) / 3
+    
+    @staticmethod
+    def sphere(radius: float) -> float:
+        """Calculates the volume of a sphere.
+
+        Args:
+            radius (float): Radius of sphere
+
+        Returns:
+            float: Volume of sphere
+        """
+
+        return (4/3 * pi) * (radius ** 3)
+    
+    @staticmethod
+    def cylindroid(radius: float, height: float) -> float:
+        """Calculates the volume of a cylinder
+
+        Args:
+            radius (float): Radius of cylinder.
+            height (float): Height of cylinder.
+
+        Returns:
+            float: Volume of the cylinder.
+        """
+
+        return pi * (radius ** 2) * height
+    
+    @staticmethod
+    def right_circular_cone(radius: float, height: float) -> float:
+        """Calculate the volume of a right-angled circular cone.
+
+        Args:
+            radius (float): Radius of cone.
+            height (float): Height of cone.
+
+        Returns:
+            float: Volume of cone.
+        """
+
+        return pi * (radius ** 2) * (height / 3)
+
+    @staticmethod
+    def oblique_cone(radius: float, height: float) -> float:
+        """Calculate the volume of a oblique cone.
+
+        Args:
+            radius (float): Radius of cone.
+            height (float): Height of cone.
+
+        Returns:
+            float: Volume of cone.
+        """
+
+        return (1 / 3) * pi * (radius ** 2) * height
+    
+class Security():
+    """This class offers many functions and tools for passwords, hashes, etc.. No passwords or other sensitive information is ever collected when using this class."""
+    
+    @staticmethod
+    def password_strength_score(password: str, common_passwords: list[str]=None) -> int:
+        """Calculates the strength score of a password from 1 to 100. \nNote: No password is recorded when using this function. 
+        \nAdditionally, you can set a common_passwords parameter to a list of common passwords that you want the score to deduct points if any common passwords are found. """
+
+        max_entropy_score: int = 30 
+
+        # calculate length score
+
+        password_length: int = len(password)
+
+        if password_length <= 4:
+            length_score: int = 0
+        elif 5 <= password_length < 8:
+            length_score: int = 10
+        elif 8 <= password_length < 12:
+            length_score: int = 20
+        elif 12 <= password_length <= 16:
+            length_score: int = 25
+        elif password_length > 16:
+            length_score: int = 30
+
+        has_lower: bool = bool(search(r"[a-z]", password))
+        has_upper: bool = bool(search(r"[A-Z]", password))
+        has_digit: bool = bool(search(r"\d", password))
+        has_special: bool = bool(search(r"[!@#$%^&*(),.?':{}}|<>]", password))
+
+        complexity_score: int = (has_lower + has_upper + has_digit + has_special) * 10
+
+        if common_passwords:
+            for common_password in common_passwords:
+                if common_password.lower() in password:
+                    password_penalty = 50
+            if password.lower() in common_passwords:
+                password_penalty = 50
+        else:
+            password_penalty = 0
+
+        if len(set(password)) == 1:  # All characters are the same
+            entropy_score = 0
+        else:
+            entropy = 0
+            pool_size = 0
+            if has_lower:
+                pool_size += 26
+            if has_upper:
+                pool_size += 26
+            if has_digit:
+                pool_size += 10
+            if has_special:
+                pool_size += len('!@#$%^&*(),.?":{}|<>')
+
+            entropy = password_length * log2(pool_size)
+            entropy_score = min(30, entropy / 4)
+
+            if entropy_score > max_entropy_score:
+                entropy_score = 30
+
+        return round(length_score + complexity_score + entropy_score - password_penalty)
+    
+    @staticmethod
+    def generate_password() -> str:
+        """Generates a password with a length of 16-24 characters. Which is considered very strong by most applications."""
+
+        chars: list[str] = list("QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()-=_+{[}]:;'<.,>?\/|")
+
+        generated_password: str = ""
+
+        for i in range(0, randint(16,24)):
+            generated_password = generated_password + generated_password.join(choice(chars))
+
+        return generated_password

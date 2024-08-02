@@ -7,20 +7,20 @@ Package Repository includes:
 View [Paramath](https://pypi.org/project/paramath/) on PyPi!
 
 ## VERSION
-0.1.1 | May 16 2024
+0.1.2 | August 1 2024
 ## INSTALL
 - Use package manager [pip](https://pip.pypa.io/en/stable/) and run the following command in your command prompt.
 ```bash
 pip install paramath
 ```
-## CHANGE LOG - 0.1.0 -> 0.1.1
-- General bug fixes
-- Added new method to Table() class called "coefficient_of_determination()" which returns the R^2 value for the line of best fit.
-- Rewrote a lot of functions' and methods' summaries and descriptions to give a better insight on what they do.
-- Edited the hyp() method to ensure better accuracy of return value. 
-- Removed "golden_ratio()" method as it is obsolete to the "phi" constant.
+## CHANGE LOG - 0.1.1 -> 0.1.2
+- Added the following log functions: log, log10, logb (logarithmic functions are still being tested. results may not be 100% accurate)
+- Added a new function nrsqrt() which works just the same as sqrt() but instead, it uses the Newton-Raphson algorithm.
+- Edited all trignometric functions to allow user to choose between degrees (DEGREES) and radians (RADIANS). By default, the function is set to DEGREES.
+- Added two classes, Volumetrics & Security. Volumetrics() contains functions for finding volumes of several 3D shapes. Security() contains two functions, a password generation function, and a function that gives a score based on the strength of a password. There are plans for creating hashing functions.
+- Added constants: DEGRESS, RADIANS, FUNCTION, Y_EQUALS (FUNCTION & Y_EQUALS do not have any functionality as of right now.)
 ## BUG FIXES
-- Fixed (as to my knowledge and testing) a LOT of bugs with the hyperbolic and regular trignometric functions. 
+- General bug fixes found during development.
 ## USAGE
 Code:
 ```python
