@@ -1,4 +1,6 @@
-""""""
+"""
+Paramath (comes from the words "parametric" and "math") is a powerful mathematical library for Python developers.
+"""
 
 from collections import Counter
 from typing import *
@@ -520,12 +522,6 @@ def coth(x: float) -> float: #hyperbolic cotangent
     if x == 0:
         return "undefined"
     return 1 / tanh(x)
-
-def polynomial_integral(polynomial: list, upperbound: float, lowerbound: float) -> float:
-    """Takes in a list and interprets it as a polynomial. 
-       For example, if you have [3, 5, -2] as the polynomial,
-       it will be interpreted as 3x^2 + 5x - 2, then integrated
-       using the power rule x^n+1/n+1"""
     
 def cis(x: float) -> complex:
     """Returns a complex number.

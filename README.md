@@ -4,6 +4,11 @@ Package Repository includes:
 - Example Python files located ```/Paramath/examples/```.
 - Directions on how to use this library.
 
+## My Personal Motive Behind The Paramath Project.
+Message from developer: 
+
+I personally started this project to teach myself on how to implement powerful mathematical algorithms into any Python project. Over time, this project has grown to have nearly 100 different functions/methods. This project has also grown into something that I am quite proud of to have, and I hope those who use it, have good experiences. Something worth mentioning... Is that the Paramath project is constantly being developed and tested. There are chances where some newer functions or methods that are recently added may not be 100% accurate or may rely off of approximations. Of course though, this is subject to change. As the developer of this project I have had fun making, I want to ensure the best out of this project. If you happen to encounter any bugs or instances where a result is heavily incorrect, please let me know!
+
 View [Paramath](https://pypi.org/project/paramath/) on PyPi!
 
 ## VERSION
@@ -47,13 +52,13 @@ Code:
 ```python
 import paramath
 
-angle = 270
+angle = pi/2 # 1.57079632679
 
-sine_of_angle = paramath.sin(angle)
+sine_of_angle = paramath.sin(angle, RADIANS)
 
-print(f"The sine of {angle} degrees is {sine_of_angle}")
+print(f"The sine of {angle} radians is {sine_of_angle}")
 ```
 Output: 
 ```
-The sine of 270 degrees is -1.0
+The sine of 1.57079632679 radians is 1.0
 ```
