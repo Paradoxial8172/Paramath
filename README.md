@@ -4,15 +4,18 @@ Package Repository includes:
 - Example Python files located ```/Paramath/examples/```.
 - Directions on how to use this library.
 
-## My Personal Motive Behind The Paramath Project.
-Message from developer: 
+## Important!! Please Read Before Using Paramath
 
-I personally started this project to teach myself on how to implement powerful mathematical algorithms into any Python project. Over time, this project has grown to have nearly 100 different functions/methods. This project has also grown into something that I am quite proud of to have, and I hope those who use it, have good experiences. Something worth mentioning... Is that the Paramath project is constantly being developed and tested. There are chances where some newer functions or methods that are recently added may not be 100% accurate or may rely off of approximations. Of course though, this is subject to change. As the developer of this project I have had fun making, I want to ensure the best out of this project. If you happen to encounter any bugs or instances where a result is heavily incorrect, please let me know!
+Dear Python Developer:
+
+    I personally started this project to teach myself on how to implement powerful mathematical algorithms into any Python project. Over time, this project has grown to have nearly 100 different functions/methods. This project has also grown into something that I am quite proud of to have, and I hope those who use it, have good experiences. Something worth mentioning... Is that the Paramath project is constantly being developed and tested. That means that there are going to be bugs within this project. I hope to squash these bugs as soon as possible if and when they arise. Keep in mind that some of the functions/methods that are recently added are ones that are most likely to contain bugs, and results may not be what are intended, or they may be inaccurate. With this in mind, feel free to check out Paramath for yourself and feel free to let me know about any bugs you may find. Thank you for using Paramath!
+
+    ... Tamer Alssaleh
 
 View [Paramath](https://pypi.org/project/paramath/) on PyPi!
 
 ## VERSION
-0.1.2 | August 1 2024
+0.1.2 | August 2 2024
 ## INSTALL
 - Use package manager [pip](https://pip.pypa.io/en/stable/) and run the following command in your command prompt.
 ```bash
