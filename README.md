@@ -15,18 +15,15 @@ I personally started this project to teach myself on how to implement powerful m
 View [Paramath](https://pypi.org/project/paramath/) on PyPi!
 
 ## VERSION
-0.1.2 | August 2 2024
+0.1.3 | August 14 2024
 ## INSTALL
 - Use package manager [pip](https://pip.pypa.io/en/stable/) and run the following command in your command prompt.
 ```bash
 pip install paramath
 ```
 ## CHANGE LOG - 0.1.1 -> 0.1.2
-- Added the following log functions: log, log10, logb (logarithmic functions are still being tested. results may not be 100% accurate)
-- Added a new function nrsqrt() which works just the same as sqrt() but instead, it uses the Newton-Raphson algorithm.
-- Edited all trignometric functions to allow user to choose between degrees (DEGREES) and radians (RADIANS). By default, the function is set to DEGREES.
-- Added two classes, Volumetrics & Security. Volumetrics() contains functions for finding volumes of several 3D shapes. Security() contains two functions, a password generation function, and a function that gives a score based on the strength of a password. There are plans for creating hashing functions.
-- Added constants: DEGRESS, RADIANS, FUNCTION, Y_EQUALS (FUNCTION & Y_EQUALS do not have any functionality as of right now.)
+- Added the System() class. This class offers functions for encoding and decoding strings and other python objects as well as tools for finding the size of Python objects and variables in bytes. There are also functions available for converting Python objects and variables into their binary, hexadecimal, and octal representations.
+- Added constants: BASE16, BASE32, BASE64, BASE85. (FUNCTION & Y_EQUALS still do not have any functionality as of right now.)
 ## BUG FIXES
 - General bug fixes found during development.
 ## USAGE

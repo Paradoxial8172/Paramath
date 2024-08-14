@@ -7,6 +7,8 @@ from typing import *
 from re import search
 from math import log2
 from random import choice, randint
+from sys import getsizeof
+from base64 import b16encode, b16decode, b32encode, b32decode, b64encode, b64decode, b85encode, b85decode
 
 # Error handling
 """
@@ -31,6 +33,13 @@ RADIANS: str = "radians"
 
 FUNCTION: str = "function"
 Y_EQUALS: str = "y_equals"
+
+# Encoding
+
+BASE16: str = "base16"
+BASE32: str = "base32"
+BASE64: str = "base64"
+BASE85: str = "base85"
 
 def is_equal(x: float, y: float) -> bool: # checks if two arguments are equal 
     """Checks if two numbers are equal. Returns True if yes, otherwise False."""
@@ -667,7 +676,7 @@ def summation(n: int=1, a: int=1) -> float:
 
     return i
 
-def count(values: list, square=False) -> float:
+def count(values: list[float], square: bool=False) -> float:
     """Returns the sum of all values in given list.
 
     Args:
@@ -1109,8 +1118,9 @@ class Security():
     
     @staticmethod
     def password_strength_score(password: str, common_passwords: list[str]=None) -> int:
-        """Calculates the strength score of a password from 1 to 100. \nNote: No password is recorded when using this function. 
-        \nAdditionally, you can set a common_passwords parameter to a list of common passwords that you want the score to deduct points if any common passwords are found. """
+        """
+        Calculates the strength score of a password from 1 to 100. \nNote: No password is recorded when using this function. Additionally, you can set a common_passwords parameter to a list of common passwords that you want the score to deduct points if any common passwords are found. 
+        """
 
         max_entropy_score: int = 30 
 
@@ -1171,7 +1181,7 @@ class Security():
     def generate_password() -> str:
         """Generates a password with a length of 16-24 characters. Which is considered very strong by most applications."""
 
-        chars: list[str] = list("QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()-=_+{[}]:;'<.,>?\/|")
+        chars: list[str] = list("QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()-=_+{[}]:;'<.,>?\\/|")
 
         generated_password: str = ""
 
@@ -1179,3 +1189,88 @@ class Security():
             generated_password = generated_password + generated_password.join(choice(chars))
 
         return generated_password
+
+class System():
+    """
+    # System Class
+    The System class provides necessary functions for finding things such as memory size of Python objects and variables as well as tools for converting string to their hexidecimal, binary, octal representations, and as well as encoding and decoding. This class uses built-in tools from Python's base64 and sys libraries.
+    """
+
+    @staticmethod
+    def memory(object) -> float:
+        """Returns the memory size of a Python object or variable."""
+
+        return getsizeof(object)
+
+    @staticmethod
+    def hexidecimal(object) -> str:
+        """Returns the hexidecimal representation of a Python object or variable."""
+        
+        return str(object).encode("utf-8").hex()
+
+    @staticmethod
+    def binary(object) -> int:
+        """Returns the binary representation of a Python object or variable."""
+        
+        binary_string = ""
+        for byte in str(object).encode("utf-8"):
+            binary_string += format(byte, "08b")
+
+        return binary_string
+    
+    @staticmethod
+    def octal(object) -> str:
+        """Returns the octal representation of a Python object or variable."""
+        
+        octal_string = ""
+        for byte in str(object).encode("utf-8"):
+            octal_string += format(byte, "03o")  # '03o' ensures 3-digit octal representation
+
+        return octal_string
+    
+    @staticmethod
+    def encode(string: str, encoding: str) -> str:
+        """Returns an encoded string representation. Supports Base 16, 32, 64, and 85.
+
+        Args:
+            string (str): String to encode.
+            encoding (str): Encoding type. 
+
+        Returns:
+            str: Encoded string.
+        """
+
+        string = string.encode('utf-8')
+
+        if encoding == BASE16:
+            return b16encode(string).decode('utf-8')
+        elif encoding == BASE32:
+            return b32encode(string).decode('utf-8')
+        elif encoding == BASE64:
+            return b64encode(string).decode('utf-8')
+        elif encoding == BASE85:
+            return b85encode(string).decode('utf-8')
+        else:
+            raise ValueError("Invalid or unsuported encoding types.")
+
+    @staticmethod
+    def decode(encoded_string: str, encoding: str) -> str:
+        """Returns a decoded string representation. Supports Base 16, 32, 64, and 85.
+
+        Args:
+            encoded_string (str): Encoded string to decode.
+            encoding (str): Encoding type. 
+
+        Returns:
+            str: Decoded string.
+        """
+        if encoding == BASE16:
+            return b16decode(encoded_string)
+        elif encoding == BASE32:
+            return b32decode(encoded_string)
+        elif encoding == BASE64:
+            return b64decode(encoded_string)
+        elif encoding == BASE85:
+            return b85decode(encoded_string)
+        else:
+            raise ValueError("Invalid or unsuported encoding types.")
