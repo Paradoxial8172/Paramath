@@ -21,7 +21,7 @@ View [Paramath](https://pypi.org/project/paramath/) on PyPi!
 ```bash
 pip install paramath
 ```
-## CHANGE LOG - 0.1.1 -> 0.1.2
+## CHANGE LOG - 0.1.2 -> 0.1.3
 - Added the System() class. This class offers functions for encoding and decoding strings and other python objects as well as tools for finding the size of Python objects and variables in bytes. There are also functions available for converting Python objects and variables into their binary, hexadecimal, and octal representations.
 - Added constants: BASE16, BASE32, BASE64, BASE85. (FUNCTION & Y_EQUALS still do not have any functionality as of right now.)
 ## BUG FIXES
