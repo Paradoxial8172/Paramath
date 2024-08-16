@@ -1,5 +1,12 @@
 """
-Paramath (comes from the words "parametric" and "math") is a powerful mathematical library for Python developers.
+# Paramath 0.1.3
+## Powerful mathematical library for Python devlopers.
+Paramath (coming from the words "parametric" and "mathematics" mixed together) is a powerful 3rd party library for Python 
+devlopers. Paramath offers a wide variety of mathematical functions to help developers implement quick math in their projects.
+Some of these functions include trigonometric and hyperbolic functions, functions that iterate through lists to find things 
+such as mean, median, and mode, as well as functions for generating graphs based on scatter plots! Paramath also offers a 
+variety of encoding functions for base16, 32, 64, etc.. as well as functions that can generate strong passwords, give 
+strength scores to passwords, etc... 
 """
 
 from collections import Counter
@@ -11,9 +18,30 @@ from sys import getsizeof
 from base64 import b16encode, b16decode, b32encode, b32decode, b64encode, b64decode, b85encode, b85decode
 
 # Error handling
-"""
-To do later...
-"""
+
+class ParamathError(Exception):
+    """Base class for all Paramath related exceptions."""
+    pass
+
+class TableInitalizationError(ParamathError):
+    """Raised when a Table object's two lists do not have the same length"""
+    def __init__(self, message="Your Table objects must have two lists of the same length."):
+        self.message = message
+        super().__init__(self.message)
+
+class DomainError(ParamathError):
+    """Raised when a Table object's two lists do not have the same length"""
+    def __init__(self, message="Calculation out of domain or no solution available."):
+        self.message = message
+        super().__init__(self.message)
+
+class InvalidLiteralError(ParamathError):
+    """Raised when a incorrect literal is passed through a function."""
+    def __init__(self, message="Literal is not supported."):
+        self.message = message
+        super().__init__(self.message)
+
+# Variables
 
 pi: float = 3.1415926535897
 e: float = 2.7182818284590
@@ -168,7 +196,7 @@ def sqrt(radicand: float) -> float:
         except TypeError:
             pass
     elif radicand < 0:
-        raise ValueError("Cannot take square root of negative values.")
+        raise DomainError()
     
 def nrsqrt(radicand: float) -> float:
     """Unlike the basic paramath.sqrt() function, paramath.nsqrt() uses the Newton-Raphson algorithm for finding square roots. Accuracy may differ in some calculations.
@@ -184,7 +212,7 @@ def nrsqrt(radicand: float) -> float:
     """
 
     if radicand < 0:
-        raise ValueError("Cannot take square root of negative values.")
+        raise DomainError()
     else:
         x = radicand / 2
         while True:
@@ -299,7 +327,7 @@ def sin(x: float, mode=DEGREES) -> float:
     elif mode == RADIANS:
         x %= tau
     else: 
-        raise NameError("Invalid mode name for function.")
+        raise InvalidLiteralError()
     
     result = 0
     sign = 1
@@ -329,7 +357,7 @@ def cos(x: float, mode=DEGREES) -> float:
     elif mode == RADIANS:
         x %= tau
     else: 
-        raise NameError("Invalid mode name for function.")
+        raise InvalidLiteralError()
     
     x %= 360
     x = radians(x)
@@ -367,7 +395,7 @@ def tan(x: float, mode=DEGREES) -> float:
             return "Undefined"
         return sin(x, RADIANS) / cos(x, RADIANS)
     else: 
-        raise NameError("Invalid mode name for function.")
+        raise InvalidLiteralError()
     
 
 
@@ -395,7 +423,7 @@ def sec(x: float, mode=DEGREES) -> float:
             return "Undefined"
         return 1 / cos(x, RADIANS)
     else: 
-        raise NameError("Invalid mode name for function.")
+        raise InvalidLiteralError()
 
 
 def csc(x: float, mode=DEGREES) -> float:
@@ -422,7 +450,7 @@ def csc(x: float, mode=DEGREES) -> float:
             return "Undefined"
         return 1 / sin(x, RADIANS)
     else: 
-        raise NameError("Invalid mode name for function.")
+        raise InvalidLiteralError()
 
 def cot(x: float, mode=DEGREES) -> float:
 
@@ -448,7 +476,7 @@ def cot(x: float, mode=DEGREES) -> float:
             return 0
         return 1 / tan(x, RADIANS)
     else: 
-        raise NameError("Invalid mode name for function.")
+        raise InvalidLiteralError()
 
 
 def sinc(x: float) -> float:
@@ -960,6 +988,10 @@ class Table():
 
     """
     def __init__(self, L1_X: list, L2_Y: list):
+        
+        if len(L1_X) != len(L2_Y):
+            raise TableInitalizationError()
+
         self.L1_X = L1_X
         self.L2_Y = L2_Y
 
@@ -972,8 +1004,6 @@ class Table():
         Returns:
             list[tuple]: list of all paired points.
         """
-        if len(self.L1_X) > len(self.L2_Y) or len(self.L2_Y) > len(self.L1_X):
-            raise ValueError("Not all values have a corresponding pair, be sure to check if all values in list one have a pair in list two and vise versa.")
         n = 0
         points_list = []
         while n < len(self.L1_X):
@@ -983,10 +1013,9 @@ class Table():
         return points_list
 
     def linear_regression(self) -> str:
-        """Generates a rough approximation of a linear function that best represents the trend with respect to x and y values. 
-        Form: y=mx+b\n
+        """Generates a rough approximation of a linear graph that best represents the trend with the given x and y values. 
         Returns:
-            str: Rough approximated linear function of the plot.
+            str: Rough approximated linear graph of the plot.
         """
         index_count = len(self.L2_Y)
         sum_squared_x_values = count(self.L1_X, square=True)

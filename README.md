@@ -15,15 +15,15 @@ I personally started this project to teach myself on how to implement powerful m
 View [Paramath](https://pypi.org/project/paramath/) on PyPi!
 
 ## VERSION
-0.1.3 | August 14 2024
+0.1.4 | August 16 2024
 ## INSTALL
 - Use package manager [pip](https://pip.pypa.io/en/stable/) and run the following command in your command prompt.
 ```bash
 pip install paramath
 ```
-## CHANGE LOG - 0.1.2 -> 0.1.3
-- Added the System() class. This class offers functions for encoding and decoding strings and other python objects as well as tools for finding the size of Python objects and variables in bytes. There are also functions available for converting Python objects and variables into their binary, hexadecimal, and octal representations.
-- Added constants: BASE16, BASE32, BASE64, BASE85. (FUNCTION & Y_EQUALS still do not have any functionality as of right now.)
+## CHANGE LOG - 0.1.3 -> 0.1.4
+- Added Paramath-specific errors that can be raised. (InvalidLiteralError, DomainError, TableInitializationError)
+- (FUNCTION & Y_EQUALS still do not have any functionality as of right now.)
 ## BUG FIXES
 - General bug fixes found during development.
 ## USAGE
