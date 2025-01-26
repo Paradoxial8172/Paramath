@@ -30,7 +30,7 @@ class TableInitalizationError(ParamathError):
         super().__init__(self.message)
 
 class DomainError(ParamathError):
-    """Raised when a Table object's two lists do not have the same length"""
+    """Raised whenever a value is found to be out of domain."""
     def __init__(self, message="Calculation out of domain or no solution available."):
         self.message = message
         super().__init__(self.message)
@@ -62,12 +62,10 @@ RADIANS: str = "radians"
 FUNCTION: str = "function"
 Y_EQUALS: str = "y_equals"
 
-# Encoding
+# ALGORITHMS
 
-BASE16: str = "base16"
-BASE32: str = "base32"
-BASE64: str = "base64"
-BASE85: str = "base85"
+SQRT_NEWTON_RAPHSON: str = "new_rap"
+SQRT_EXP_BASED: str = "exp_based"
 
 def is_equal(x: float, y: float) -> bool: # checks if two arguments are equal 
     """Checks if two numbers are equal. Returns True if yes, otherwise False."""
@@ -76,12 +74,19 @@ def is_equal(x: float, y: float) -> bool: # checks if two arguments are equal
     else:
         return False
     
-def is_close(x: float, y: float, limit: float=0.25) -> bool:
-    """Checks if two numbers are close to each other but not the same. 
-       The limit parameter is the value that must be greater than the 
-       difference between x and y. (limit is 0.25 by default)""" 
+def is_close(x: float, y: float, threshold: float=0.25) -> bool:
+    """Checks if numbers `x` and `y` are close to each other by a defined threshold.
+
+    Args:
+        x (float): `x` value.
+        y (float): `y` value.
+        threshold (float, optional): The threshold of how close two numbers can be. Defaults to 0.25 (1/4).
+
+    Returns:
+        bool: True -> if numbers `x` and `y` are close to each other, False -> if otherwise.
+    """
     difference = x - y
-    if abs(difference) > limit:
+    if abs(difference) > threshold:
         return False
     else:
         return True
@@ -96,14 +101,14 @@ def is_prime(n: float) -> bool:
     return True 
     
 def power(base: float, exponent: float) -> float:
-    """Brings the base to the power of an exponent.
+    """Brings the base to the power of an exponent. (b^n)
 
     Args:
-        base (float): Base
-        exponent (float): Exponent/Power
+        base (float): Base or `b` value.
+        exponent (float): Exponent/Power or `n` value.
 
     Returns:
-        float: base^exponent
+        float: base ^ exponent. 
     """
     return base ** exponent
 
@@ -157,10 +162,10 @@ def logb(x: float, base: float) -> float:
     else:
         return result
 
-def squared(base: float) -> float:
+def square(base: float) -> float:
     return base ** 2
 
-def cubed(base: float) -> float:
+def cube(base: float) -> float:
     return base ** 3
 
 def fibonacci(n: int) -> list:
@@ -178,25 +183,19 @@ def fibonacci(n: int) -> list:
         fibonacci_sequence.append(next_term)
     return fibonacci_sequence
 
-def sqrt(radicand: float) -> float:
-    """Calculates the square root of a number using Python's exponentiation operator.
-
-    Args:
-        radicand (float): Main argument.
-
-    Raises:
-        ValueError: In event that the main argument is a negative number.
-
-    Returns:
-        float: Square root of 
-    """
-    if radicand > 0:
-        try: 
+def sqrt(radicand: float | int, algorithm: str=SQRT_EXP_BASED) -> float | int:
+    if radicand < 0:
+        return ((radicand * -1) ** (1/2)) * 1j
+    match algorithm:
+        case "exp_based":
             return radicand ** (1/2)
-        except TypeError:
-            pass
-    elif radicand < 0:
-        raise DomainError()
+        case "new_rap":
+            x = radicand / 2
+            while True:
+                term = 0.5 * (x + radicand / x)
+                if abs(x - term) < 1e-10:
+                    return term
+                x = term
     
 def nrsqrt(radicand: float) -> float:
     """Unlike the basic paramath.sqrt() function, paramath.nsqrt() uses the Newton-Raphson algorithm for finding square roots. Accuracy may differ in some calculations.
@@ -205,7 +204,7 @@ def nrsqrt(radicand: float) -> float:
         radicand (float): Main argument.
 
     Raises:
-        ValueError: In event that the main argument is a negative number.
+        DomainError: In event that the main argument is a negative number.
 
     Returns:
         float: Square root using Newton-Raphson Algorithm.
@@ -245,8 +244,7 @@ def factorial(constant: int) -> int:
             factorial *= num
         return factorial
     except TypeError as error:
-        raise TypeError("factorial function cannot take in non-integer values.")
-       
+        raise DomainError()
 def permutation(total: int, objects: int) -> int:
     """Returns the number of orders/arrangements a set can be established in.
 
@@ -584,25 +582,6 @@ def mod(x: float, y: float) -> float:
     """
     return x % y
 
-def limit(function: str, stepsize: float) -> float:
-    supported_variables = {
-        "x": stepsize,
-        "y": stepsize,
-        "z": stepsize,
-        "a": stepsize,
-        "b": stepsize,
-        "c": stepsize,
-        "d": stepsize,
-        "t": stepsize
-    }
-    try:
-        limit = eval(function, supported_variables)
-
-        return limit
-    except NameError:
-        return f"Varriable not supported in function. Supported Variables: {supported_variables.keys()}"
-
-
 def mean(array: list) -> float:
     """
     Returns the mean (average) of a list.
@@ -628,7 +607,7 @@ def mode(array: list) -> float:
     num_list = Counter(array)
     return num_list.most_common(1)
 
-def int_interval(a: int, b: int, increment: float=1.0) -> list:
+def interval(a: int, b: float, increment: float=1.0) -> list[int] | list[float]:
     """Generates a list of numbers from `a` through `b` in specified increments (increment=1.0 by default).
 
     Args:
@@ -642,7 +621,7 @@ def int_interval(a: int, b: int, increment: float=1.0) -> list:
     interval_list = []
     current = a
     for _ in range(a, int(b/increment)+1):
-        interval_list.append(current)
+        interval_list.append(int(current))
         current += increment
         for value in interval_list:
             if value > b:
@@ -652,41 +631,6 @@ def int_interval(a: int, b: int, increment: float=1.0) -> list:
         interval_list.pop(len(interval_list)-1)
 
     return interval_list
-
-def eval_interval(a: int, b: int, increment: float=1.0, function: str="x") -> list:
-    """Like the `int_interval` function, the `eval_interval` function generates a list of numbers from `a` through `b` in specified increments (increment=1.0 by default) while also taking in a `function` arguement for the values in the interval to be evaluated at and then returned to a new list containing the evaluated values.\nExample of `function` usage: `function="x**2"`.
-
-    Args:
-        a (int): Starting Value
-        b (int): Ending Value
-        increment (float, optional): Increment. Defaults to 1.0.
-        function (str, optional): Function that each value in interval will be evaulated to. Defaults to "x".
-
-    Returns:
-        list: A list containing values within the interval list that were evaluated with in the given `function`.
-    """
-    interval_list = []
-    current = a
-    for _ in range(a, int(eval(function, {"x": (b/increment)+1, "X": (b/increment)+1}))):
-        interval_list.append(current)
-        current += increment
-        for value in interval_list:
-            if value > b:
-                interval_list.remove(value)
-
-    if interval_list[len(interval_list)-1] > b:
-        interval_list.pop(len(interval_list)-1)
-
-    eval_interval_list = []
-    for value in interval_list:
-        supported_variables = {
-            "x": value,
-            "X": value
-        }
-        val = eval(function, supported_variables)
-        eval_interval_list.append(val)
-
-    return eval_interval_list
 
 def summation(n: int=1, a: int=1) -> float:
     """Sum of numbers from `a` through `b` in specified increments, only adds the nth proceeding number of the series.\nFollows the series: ∑(n).
@@ -714,13 +658,13 @@ def count(values: list[float], square: bool=False) -> float:
     Returns:
         float: Sum of all values.
     """
-    if square is False:
+    if not square:
         sum = 0
         length = len(values)
         for i in range(0, length):
             sum += values[i]
         return sum       
-    elif square is True:
+    else:
         sum = 0
         length = len(values)
         for i in range(0, length):
@@ -767,13 +711,6 @@ class DataSet:
         """
         num_list = Counter(self.array)
         return num_list.most_common(1)
-    
-    def num_counts(self) -> float: 
-        """
-        Returns all numbers and their number of occurances of the dataset.
-        """
-        num_list = Counter(self.array)
-        return num_list.most_common()
     
     def sum(self) -> float:
         """
@@ -843,8 +780,8 @@ class DataSet:
                 odds_list.append(n)
 
         return {
-            "Evens": evens_list,
-            "Odds": odds_list
+            "evens": evens_list,
+            "odds": odds_list
         }
     
     def primes(self) -> list:
@@ -864,128 +801,22 @@ class DataSet:
         """Returns a dictionary of common insights for the dataset."""
 
         insights = {
-            "Mean": self.mean(),
-            "Median": self.median(),
-            "Mode": self.mode(),
-            "Maximum Value": self.max(),
-            "Minimum Value": self.min(),
-            "Evens": self.evens(),
-            "Odds": self.odds(),
-            "Prime Numbers": self.primes(),
-            "Occurrences": self.num_counts(),
-            "Sum": self.sum()
+            "mean": self.mean(),
+            "median": self.median(),
+            "mode": self.mode(),
+            "maximum_value": self.max(),
+            "minimum_value": self.min(),
+            "evens": self.evens(),
+            "odds": self.odds(),
+            "primes": self.primes(),
+            "sum": self.sum()
         }
 
         return insights
-    
-class Parabola:
-    """Create a Parabola object from given arguments of a, b, and c. 
-
-    Args: 
-    
-    a: float
-    b: float (None on default)
-    c: float (None on default)
-
-    """
-    def __init__(self, a: float, b: float=None, c: float=None):
-        self.a = a
-        self.b = b
-        self.c = c
-
-    def solutions(self) -> tuple:
-        """
-        Returns 1 or 2 real solutions, if any. 
-        Works the same as the quadratic function 
-        already provided outside the Parabola object.
-        """
-        
-        radicand = (self.b ** 2) - (4 * self.a * self.c)
-        denominator = 2 * self.a
-
-        try: 
-            solution_one = ((-1 * self.b) + sqrt(radicand)) / denominator
-        except TypeError:
-            solution_one = "j"
-        try:
-            solution_two = ((-1 * self.b) - sqrt(radicand)) / denominator
-        except TypeError:
-            solution_two = "j"
-        
-        return (solution_one, solution_two)
-    
-    def vertex(self) -> tuple:
-        """
-        Calculates the vertex by finding the x-cordinate using the x = -b/2a formula, 
-        then plugs in x into the equation to find the y-cordinate.
-        """
-        
-        x = (-1 * (self.b)) / (2 * self.a)
-        y = (self.a * (x ** 2)) + (self.b * x) + (self.c)
-        
-        return (x, y)
-    
-    def is_positive(self) -> bool:
-        """
-        Checks if the parabola is postive (opening upwards) or negative (opening downwards).
-        """
-        if self.a > 0:
-            return True
-        elif self.a < 0:
-            return False
-        
-    def max(self) -> float:
-        """
-        Calculates the smallest y-value for a parabola. 
-        """
-        if self.a < 0:
-            x = (-1 * (self.b)) / (2 * self.a)
-            y = (self.a * (x ** 2)) + (self.b * x) + (self.c)
-            
-            return y
-        else:
-            return None       
-         
-    def min(self) -> float:
-        """
-        Calculates the largest y-value for a parabola. 
-        """
-        if self.a > 0:
-            x = (-1 * (self.b)) / (2 * self.a)
-            y = (self.a * (x ** 2)) + (self.b * x) + (self.c)
-            
-            return y
-        else:
-            return None
-
-    def domain(self) -> tuple:
-        """
-        Finds the domain of a given parabola.
-        """
-        return ("-inf", "inf")
-
-    
-    def range(self) -> tuple:
-        """
-        Finds the range of a given parabola.
-        """
-        if self.is_positive() == True:
-            return (self.min(), "inf")
-        elif self.is_positive() == False:
-            return ("-inf", self.max())
-        
-    def limit(self, h: float) -> float:
-        """
-        Finds the limit (lim) of a given parabola as x approaches h.
-        """
-
-        return self.a * (h ** 2) + (self.b * h) + (self.c)
 
 class Table():
     """
-    NEW!
-    Create a table object by providing two lists (list[int] or list[float]) of X and Y values to perform operations such as finding the line of best fit, and more!.
-
+    Create a table object by providing two lists (`list[int]` or `list[float]`) of `x` and `y` values to perform operations such as finding the line of best fit, and more!.
     """
     def __init__(self, L1_X: list, L2_Y: list):
         
@@ -1012,14 +843,17 @@ class Table():
 
         return points_list
 
-    def linear_regression(self) -> str:
-        """Generates a rough approximation of a linear graph that best represents the trend with the given x and y values. 
+    def linear_regression(self, notation: str=Y_EQUALS) -> str:
+        """Returns a linear equation of the line of best fit.
+
+        Args:
+            notation (str, optional): `FUNCTION` or `Y_EQUALS` notation. Defaults to `Y_EQUALS`.
+
         Returns:
-            str: Rough approximated linear graph of the plot.
+            str: Linear equation.
         """
         index_count = len(self.L2_Y)
         sum_squared_x_values = count(self.L1_X, square=True)
-        sum_squared_y_values = count(self.L2_Y, square=True)
         sum_x_y_values = 0
         for i in range(0, len(self.L1_X)):
             sum_x_y_values += (self.L1_X[i] * self.L2_Y[i])
@@ -1034,7 +868,13 @@ class Table():
         elif constant == 0:
             sign = "+"
 
-        return f"y = {round(slope, 2)}x {sign} {round(constant, 2)}"
+        match notation:
+            case "y_equals":
+                return f"y = {round(slope, 2)}x {sign} {round(constant, 2)}"
+            case "function":
+                return f"f(x) = {round(slope, 2)}x {sign} {round(constant, 2)}"
+            case _:
+                return None
 
     def coefficient_of_determination(self) -> float:
         """Returns the coefficient of determination otherwise known as the R^2 value. \n
@@ -1207,99 +1047,22 @@ class Security():
         return round(length_score + complexity_score + entropy_score - password_penalty)
     
     @staticmethod
-    def generate_password() -> str:
-        """Generates a password with a length of 16-24 characters. Which is considered very strong by most applications."""
+    def generate_password(minimum_characters: int=16, maximum_characters: int=24) -> str:
+        """_summary_
+
+        Args:
+            minimum_characters (int, optional): Minimum amount of characters. Defaults to 16.
+            maximum_characters (int, optional): Maximum amount of characters. Defaults to 24.
+
+        Returns:
+            str: Randomly generated password.
+        """
 
         chars: list[str] = list("QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()-=_+{[}]:;'<.,>?\\/|")
 
         generated_password: str = ""
 
-        for i in range(0, randint(16,24)):
+        for i in range(0, randint(minimum_characters, maximum_characters)):
             generated_password = generated_password + generated_password.join(choice(chars))
 
         return generated_password
-
-class System():
-    """
-    # System Class
-    The System class provides necessary functions for finding things such as memory size of Python objects and variables as well as tools for converting string to their hexidecimal, binary, octal representations, and as well as encoding and decoding. This class uses built-in tools from Python's base64 and sys libraries.
-    """
-
-    @staticmethod
-    def memory(object) -> float:
-        """Returns the memory size of a Python object or variable."""
-
-        return getsizeof(object)
-
-    @staticmethod
-    def hexidecimal(object) -> str:
-        """Returns the hexidecimal representation of a Python object or variable."""
-        
-        return str(object).encode("utf-8").hex()
-
-    @staticmethod
-    def binary(object) -> int:
-        """Returns the binary representation of a Python object or variable."""
-        
-        binary_string = ""
-        for byte in str(object).encode("utf-8"):
-            binary_string += format(byte, "08b")
-
-        return binary_string
-    
-    @staticmethod
-    def octal(object) -> str:
-        """Returns the octal representation of a Python object or variable."""
-        
-        octal_string = ""
-        for byte in str(object).encode("utf-8"):
-            octal_string += format(byte, "03o")  # '03o' ensures 3-digit octal representation
-
-        return octal_string
-    
-    @staticmethod
-    def encode(string: str, encoding: str) -> str:
-        """Returns an encoded string representation. Supports Base 16, 32, 64, and 85.
-
-        Args:
-            string (str): String to encode.
-            encoding (str): Encoding type. 
-
-        Returns:
-            str: Encoded string.
-        """
-
-        string = string.encode('utf-8')
-
-        if encoding == BASE16:
-            return b16encode(string).decode('utf-8')
-        elif encoding == BASE32:
-            return b32encode(string).decode('utf-8')
-        elif encoding == BASE64:
-            return b64encode(string).decode('utf-8')
-        elif encoding == BASE85:
-            return b85encode(string).decode('utf-8')
-        else:
-            raise ValueError("Invalid or unsuported encoding types.")
-
-    @staticmethod
-    def decode(encoded_string: str, encoding: str) -> str:
-        """Returns a decoded string representation. Supports Base 16, 32, 64, and 85.
-
-        Args:
-            encoded_string (str): Encoded string to decode.
-            encoding (str): Encoding type. 
-
-        Returns:
-            str: Decoded string.
-        """
-        if encoding == BASE16:
-            return b16decode(encoded_string)
-        elif encoding == BASE32:
-            return b32decode(encoded_string)
-        elif encoding == BASE64:
-            return b64decode(encoded_string)
-        elif encoding == BASE85:
-            return b85decode(encoded_string)
-        else:
-            raise ValueError("Invalid or unsuported encoding types.")

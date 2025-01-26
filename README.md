@@ -8,57 +8,27 @@ Package Repository includes:
 
 Dear Python Developer:
 
-I personally started this project to teach myself on how to implement powerful mathematical algorithms into any Python project. Over time, this project has grown to have nearly 100 different functions/methods. This project has also grown into something that I am quite proud of to have, and I hope those who use it, have good experiences. Something worth mentioning... Is that the Paramath project is constantly being developed and tested. That means that there are going to be bugs within this project. I hope to squash these bugs as soon as possible if and when they arise. Keep in mind that some of the functions/methods that are recently added are ones that are most likely to contain bugs, and results may not be what are intended, or they may be inaccurate. With this in mind, feel free to check out Paramath for yourself and feel free to let me know about any bugs you may find. Thank you for using Paramath!
+I personally started this project to teach myself on how to implement powerful mathematical algorithms into any Python project. Over time, this project has grown to have nearly 100 different functions/methods. This project has also grown into something that I am quite proud of to have, and I hope those who use it, have good experiences. Something worth mentioning... Is that the Paramath project is constantly being developed and tested. That means that there are going to be bugs within this project. I hope to squash these bugs as soon as possible if and when they arise. Keep in mind that some of the functions/methods that are recently added are ones that are most likely to contain bugs, and results may not be what are intended, or they may be inaccurate. With this in mind, feel free to check out Paramath for yourself and also feel free to let me know about any bugs you may find, or any suggestions or changes you would like to see added or made. Thank you for using Paramath!
 
 ... Tamer Alssaleh
 
 View [Paramath](https://pypi.org/project/paramath/) on PyPi!
 
 ## VERSION
-0.1.4 | August 16 2024
+0.1.5 | January 26th, 2025
 ## INSTALL
 - Use package manager [pip](https://pip.pypa.io/en/stable/) and run the following command in your command prompt.
 ```bash
 pip install paramath
 ```
-## CHANGE LOG - 0.1.3 -> 0.1.4
-- Added Paramath-specific errors that can be raised. (InvalidLiteralError, DomainError, TableInitializationError)
-- (FUNCTION & Y_EQUALS still do not have any functionality as of right now.)
+## CHANGE LOG - 0.1.4 -> 0.1.5
+- Changed a couple descriptions of some functions and methods to help ensure better understandability. 
+- Implemented functionality for Y_EQUALS and FUNCTION constants to allow you to choose a notation for your linear equations.
+- Removed entire System class (buggy, may return later)
+- Removed num_counts() method from DataSet() object, it is not the most useful method.
+- Changed function name int_interval() to just interval()
+- Combined square root functions into one and added a parameter for selecting an algorithm (defaults to a exponent based one)
 ## BUG FIXES
 - General bug fixes found during development.
 ## USAGE
-Code:
-```python
-import paramath
-
-# create x and y chart
-
-x = [2,2,2,4,10,6,7,8,3,9]
-y = [15,3,6,1,11,8,1,4,9,11]
-
-my_table = paramath.Table(x, y)
-
-print(f"Ordered Pairs: {my_table.ordered_pairs()}")
-print(f"Graph: {my_table.linear_regression()}")
-print(f"Coefficient of Determination (R^2): {my_table.coefficient_of_determination()}")
-```
-Output:
-```
-Ordered Pairs: [(2, 15), (2, 3), (2, 6), (4, 1), (10, 11), (6, 8), (7, 1), (8, 4), (3, 9), (9, 11)]
-Graph: y = 0.11x + 6.33
-Coefficient of Determination (R^2): 0.0050504254234526825
-```
-Code:
-```python
-import paramath
-
-angle = pi/2 # 1.57079632679
-
-sine_of_angle = paramath.sin(angle, RADIANS)
-
-print(f"The sine of {angle} radians is {sine_of_angle}")
-```
-Output: 
-```
-The sine of 1.57079632679 radians is 1.0
-```
+- For some code examples, look under the ```/Paramath/examples/``` folder.
